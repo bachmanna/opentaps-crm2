@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+  <Party partyId="DemoCrm2Party1" partyTypeId="PERSON"/>
+  <Person partyId="DemoCrm2Party1" firstName="Jane" lastName="Opentaps"/>
+  <PartyRole partyId="DemoCrm2Party1" roleTypeId="ACCOUNT_MANAGER"/>
+  <UserLogin userLoginId="jane" partyId="DemoCrm2Party1" currentPassword="{SHA}a8c323ed5c6d3c9b5ba5fa13e75939de954de085"/>
+  <ContactMech contactMechId="DEMOCRM2-1" contactMechTypeId="EMAIL_ADDRESS" infoString="jane@opentaps.com"/>
+  <PartyContactMech partyId="DemoCrm2Party1" contactMechId="DEMOCRM2-1" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartyContactMechPurpose partyId="DemoCrm2Party1" contactMechId="DEMOCRM2-1" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartySupplementalData partyId="DemoCrm2Party1" primaryEmailId="DEMOCRM2-1"/>
+  <UserLoginSecurityGroup userLoginId="jane" groupId="SALES_MANAGER" fromDate="2013-08-22 00:00:00.000"/>
+
+  <Party partyId="DemoCrm2Party2" partyTypeId="PERSON"/>
+  <Person partyId="DemoCrm2Party2" firstName="Brian" lastName="Opentaps"/>
+  <PartyRole partyId="DemoCrm2Party2" roleTypeId="ACCOUNT_MANAGER"/>
+  <UserLogin userLoginId="brian" partyId="DemoCrm2Party2" currentPassword="{SHA}a8c323ed5c6d3c9b5ba5fa13e75939de954de085"/>
+  <ContactMech contactMechId="DEMOCRM2-2" contactMechTypeId="EMAIL_ADDRESS" infoString="brian@opentaps.com"/>
+  <PartyContactMech partyId="DemoCrm2Party2" contactMechId="DEMOCRM2-2" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartyContactMechPurpose partyId="DemoCrm2Party2" contactMechId="DEMOCRM2-2" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartySupplementalData partyId="DemoCrm2Party2" primaryEmailId="DEMOCRM2-2"/>
+  <UserLoginSecurityGroup userLoginId="brian" groupId="SALES_MANAGER" fromDate="2013-08-22 00:00:00.000"/>
+
+  <Party partyId="DemoCrm2Party3" partyTypeId="PERSON"/>
+  <Person partyId="DemoCrm2Party3" firstName="Brittany" lastName="Opentaps"/>
+  <PartyRole partyId="DemoCrm2Party3" roleTypeId="ACCOUNT_MANAGER"/>
+  <UserLogin userLoginId="brittany" partyId="DemoCrm2Party3" currentPassword="{SHA}a8c323ed5c6d3c9b5ba5fa13e75939de954de085"/>
+  <ContactMech contactMechId="DEMOCRM2-3" contactMechTypeId="EMAIL_ADDRESS" infoString="brittany@opentaps.com"/>
+  <PartyContactMech partyId="DemoCrm2Party3" contactMechId="DEMOCRM2-3" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartyContactMechPurpose partyId="DemoCrm2Party3" contactMechId="DEMOCRM2-3" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2013-08-22 00:00:00.000" allowSolicitation="Y"/>
+  <PartySupplementalData partyId="DemoCrm2Party3" primaryEmailId="DEMOCRM2-3"/>
+  <UserLoginSecurityGroup userLoginId="brittany" groupId="SALES_MANAGER" fromDate="2013-08-22 00:00:00.000"/>
+
+</entity-engine-xml>
