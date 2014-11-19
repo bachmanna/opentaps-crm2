@@ -19,7 +19,6 @@
 </script>
 <script type="text/javascript" charset="utf-8" src="${widgetBaseUrl!}/contactsWidget/client/js/libs/requirejs/require.js" data-main="${widgetBaseUrl!}/js/activity-widgets/build/activity-widgets.packed.js" >
 </script>
-
 <#assign userParty = userLogin.getRelatedOne("Party") />
 <#if userParty?has_content>
   <#if userParty.partyTypeId == "PERSON">
@@ -36,59 +35,74 @@
 <#assign widgetClass = ""/>
 <#assign linkPageId = ""/>
 
-<#-- Full text search parameters -->
-<#assign searchQuery = ""/>
-<#assign searchEntity = ""/>
-<#assign noTerms = ""/>
+<#-- Tag paramaters -->
+<#assign tagName = ""/>
+<#assign tagKeywords = ""/>
+<#assign tagUrl = ""/>
+<#assign useSearch = false/>
 
 <#-- Used to assign a note to particular application object, e.g. to an order. -->
 <#assign relateTo = ""/>
 
+<#-- tag synonyms
+    ["Order", "PO", "Orders"],
+    ["Invoice", "Bill", "Order"],
+    ["Payment"]
+-->
+
 <#if orderId?has_content>
   <#assign linkPageId = orderId />
   <#assign widgetClass = "opentapsOrderId_${orderId}"/>
-  <#assign queryParam  = "&opentapsOrderId=${orderId}" />
-  <#assign createParam = "&note_field_opentapsOrderId=${orderId}&note_field_referenceName=Sales Order ${orderId}" />
-  <#assign searchEntity = "Order" />
-  <#assign searchQuery = "${orderId}"/>
+  <#assign useSearch = true/>
   <#assign notTerms = "opentapsOrderId:${orderId}">
+  <#assign tagName = "SO::${orderId}"/>
   <#if order?has_content>
     <#if order.isPurchaseOrder()>
-      <#assign createParam = "&note_field_opentapsOrderId=${orderId}&note_field_referenceName=Purchase Order ${orderId}" />
+      <#assign tagName = "PO::${orderId}"/>
     </#if>
   </#if>
+  <#assign tagKeywords = "${orderId},order|po|orders"/>
 <#elseif invoiceId?has_content>
   <#assign linkPageId = invoiceId />
   <#assign widgetClass = "opentapsInvoiceId_${invoiceId}"/>
-  <#assign queryParam  = "&opentapsInvoiceId=${invoiceId}" />
-  <#assign createParam = "&note_field_opentapsInvoiceId=${invoiceId}&note_field_referenceName=Invoice ${invoiceId}" />
-  <#assign searchEntity = "Invoice" />
-  <#assign searchQuery = "${invoiceId!}"/>
+  <#assign useSearch = true/>
+  <#assign tagKeywords = "${invoiceId},invoice|bill|order"/>
+  <#if invoice?has_content && invoice.referenceNumber?has_content>
+      <#assign tagKeywords =  tagKeywords + ",${invoice.referenceNumber!}"/>
+   </#if>
+  <#if ordersList?has_content>
+      <#assign tagKeywords =  tagKeywords + ",${ordersList!}"/>
+   </#if>
+  <#assign notTerms = "opentapsInvoiceId:${invoiceId}">
+  <#assign tagName = "Invoice::${invoiceId}"/>
 <#elseif paymentId?has_content>
   <#assign linkPageId = paymentId />
   <#assign widgetClass = "opentapsPaymentId_${paymentId}"/>
-  <#assign queryParam  = "&opentapsPaymentId=${paymentId}" />
-  <#assign createParam = "&note_field_opentapsPaymentId=${paymentId}&note_field_referenceName=Payment ${paymentId}" />
-  <#assign searchEntity = "Payment" />
-  <#assign searchQuery = "${paymentId!}"/>
+  <#assign useSearch = true/>
+  <#assign tagKeywords = "${paymentId},payment"/>
+  <#if paymentApplicationsList?has_content>
+    <#list paymentApplicationsList as invoice>
+      <#if invoice.invoiceId?has_content>
+        <#assign tagKeywords = "${paymentId},payment"/>
+      </#if>
+      <#if invoice.invoiceRefNum?has_content>
+        <#assign tagKeywords =  tagKeywords + ",${invoice.invoiceRefNum!}"/>
+      </#if>
+    </#list>
+  </#if>
+  <#assign tagName = "Payment::${paymentId}"/>
+  <#assign notTerms = "opentapsPaymentId:${paymentId}">
 <#elseif parameters.partyId?has_content>
   <#assign linkPageId = parameters.partyId />
+  <#assign tagName = "party::${parameters.partyId}"/>
+  <#assign contactTagName = "party::${parameters.partyId}"/>
+  <#assign tagKeywords = "party,${parameters.partyId}"/>
+  <#assign queryParam  = "&contactTagName=party::${parameters.partyId}" />
+  <#assign createParam = "&contactTagName=party::${parameters.partyId}" />
   <#assign widgetClass = "opentapsPartyId_${parameters.partyId}"/>
-  <#assign queryParam  = "&opentapsPartyId=${parameters.partyId}" />
-  <#assign createParam = "&opentapsPartyId=${parameters.partyId}&note_field_referenceName=Contact ${parameters.partyId}" />
-  <#if supplierPartyId?has_content && partySummary?has_content>
-    <#assign createParam = "&opentapsPartyId=${parameters.partyId}&note_field_referenceName=Supplier ${partySummary.groupName!supplierPartyId}" />
-  <#elseif partySummary?has_content>
-    <!-- ${partySummary} -->
-    <#if partySummary.groupName?has_content>
-      <#assign createParam = "&opentapsPartyId=${parameters.partyId}&note_field_referenceName=Contact ${partySummary.groupName!parameters.partyId}" />
-    <#elseif partySummary.firstName?has_content>
-      <#assign createParam = "&opentapsPartyId=${parameters.partyId}&note_field_referenceName=Contact ${partySummary.firstName} ${partySummary.lastName!}" />
-    </#if>
-  </#if>
 </#if>
 <#if pageUrlBase?has_content && linkPageId?has_content>
-  <#assign createParam = "${createParam}&note_field_referenceUrl=${StringUtil.wrapString(pageUrlBase)?url('ISO-8859-1')}${linkPageId}" />
+  <#assign tagUrl = "${StringUtil.wrapString(pageUrlBase)?url('ISO-8859-1')}${linkPageId}"/>
 </#if>
 
 <#assign userParam = ""/>
@@ -96,64 +110,116 @@
   <#assign userParam>created_by_user_userLoginId=${userLogin.userLoginId}<#if userName?has_content>&created_by_user_name=${userName}<#else>${userLogin.userLoginId}</#if></#assign>
 </#if>
 
-    <a name="activities"></a>
-    <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-            <tr>
-              <td width="50%" class="boxhead"><div style="font-size: 10pt; padding:4px 0px; background-color: grey">&nbsp;Activities from opentaps CRM2</div></td>
-            </tr>
- 
-<#if isTempTokenValid>
+<style type="text/css">
+.crm2widgets {
+  border:none;
+  border-collapse: collapse;
+}
+.crm2widgets table {
+  width:100%;
+}
+.crm2widgets .boxtop {
+  background-image: none;
+}
+.crm2widgets .crm2header {
+  background-image: none;
+  background-color: #e5e5e5;
+  border-color: #e5e5e5;
+  border-radius: 5px 5px 0 0;
+  color:#333333;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px;
+  padding-left: 10px;
+}
+.crm2widgets .crm2body {
+  border: 1px solid #e5e5e5;
+}
+.crm2widgets .crm2body td {
+  padding:10px;
+  vertical-align:top;
+}
+</style>
 
-  <#if clientDomain?has_content && queryParam?has_content>
-     <tr>
-        <td width="100%">
-          <div style="width:600px"
-	       class="activityWidget ${widgetClass!}"
-	       data-maxheight="300px"
-	       data-domain="${clientDomain}"
-	       data-widgetstyle="activities-list"
-	       data-authtoken="${authToken!}"
-	       data-canedit="true"
-	       data-shownomore="false"
-	       data-userparams="${userParam}"
-	       data-queryparams="activityType=EMAIL NOTE TASK${queryParam}" <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>></div>
 
-          <div style="width:600px; padding-bottom:5px" class="activityWidget createActivity ${widgetClass!}" data-domain="${clientDomain}" data-widgetstyle="create-activity" data-buttonclass="smallSubmit" data-authtoken="${authToken!}" data-queryparams="note_field_activityType=NOTE${createParam}<#if userParam?has_content>&${userParam}</#if>" <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>></div>
-        </td>
-      </tr>
-  </#if>
-
-  <#if clientDomain?has_content && searchEntity?has_content>
-    <br/>
-
-    <tr><td width="50%" class="boxhead"><div style="font-size: 10pt; padding:4px 0px; background-color: grey">&nbsp;More Related Activities</div></td><td>&nbsp;</td></tr>    
-
+<a name="activities"></a>
+<div class="crm2widgets">
+  <div class="crm2header"><a href="http://www.opentaps.com" target="blank_"><img src="https://crm2.opentaps.com/contactsWidget/client/img/opentaps-crm2-brand.png" alt="Opentaps CRM2" /></a></div>
+  <div class="crm2body">
+    <table>
       <tr>
-        <td width="100%">
-          <div style="width:600px"
-               class="activityWidget ${widgetClass!}"
-	       data-maxheight="300px"
-               data-domain="${clientDomain}"
-               data-widgetstyle="activities-list"
-               data-authtoken="${authToken}"
-               data-canedit="true"
-               data-disablereply="true"
-               data-shownomore="false"
-               data-userparams="${userParam}"
-               data-queryparams="activityType=EMAIL NOTE TASK"
-               data-relateto="${createParam?substring(1)}"
-               data-searchparams="entity=${searchEntity}&query=${searchQuery!}<#if notTerms?has_content>&notTerms=${notTerms}</#if>"
-               <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>></div>
-        </td>
-      </tr>
-  </#if>
-<#else>
-    <tr>
-      <td style="font-size: 9pt">
-        <p style="color:red; font-weight: bold">&nbsp;Could not get a valid authToken.</p>
-        <p>&nbsp;Have you <a href="https://crm2.opentaps.com/signup">signed up for an account</a> and <a href="http://www.opentaps.org/docs/index.php/Set_up_CRM2">set up CRM2</a>?</p>
-      </td>
-    </tr>
-</#if>
+        <#if isTempTokenValid && clientDomain?has_content>
+          <#if (queryParam?has_content || tagName?has_content)>
+            <td  <#if !useSearch> width="100%" <#else> width="50%" </#if>>
+              <div class="crm2header">Related Activities</div>
+              <div class="crm2body">
+                <div
+                  class="activityWidget ${widgetClass!}"
+                  data-maxheight="300px"
+                  data-domain="${clientDomain}"
+                  data-widgetstyle="activities-list"
+                  data-authtoken="${authToken!}"
+                  data-canedit="true"
+                  data-shownomore="false"
+                  data-userparams="${userParam}"
+                  <#if tagName?has_content>
+                  data-tagname="${tagName}"
+                  data-tagkeywords="${tagKeywords}"
+                  data-tagurl="${tagUrl}"
+                  </#if>
+                  data-queryparams="activityType=EMAIL NOTE TASK${queryParam!}"
+                  <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>
+                ></div>
 
+                <div style="padding-bottom:5px"
+                  class="activityWidget createActivity ${widgetClass!}"
+                  data-domain="${clientDomain}"
+                  data-widgetstyle="create-activity"
+                  data-buttonclass="smallSubmit"
+                  data-authtoken="${authToken!}"
+                  data-queryparams="note_field_activityType=NOTE${createParam}<#if userParam?has_content>&${userParam}</#if>"
+                  <#if tagName?has_content>
+                  data-tagname="${tagName}"
+                  data-tagkeywords="${tagKeywords}"
+                  data-tagurl="${tagUrl}"
+                  </#if>
+                  <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>
+                ></div>
+              </div>
+            </td>
+          </#if>
+
+          <#if useSearch>
+            <td <#if (queryParam?has_content || tagName?has_content)> width="100%" <#else> width="50%" </#if>>
+              <div class="crm2header">Similar Activities</div>
+              <div class="crm2body">
+                <div
+                    class="activityWidget ${widgetClass}"
+                    data-maxheight="300px"
+                    data-domain="${clientDomain}"
+                    data-widgetstyle="activities-list"
+                    data-authtoken="${authToken}"
+                    data-canedit="true"
+                    data-disablereply="true"
+                    data-shownomore="false"
+                    data-userparams="${userParam}"
+                    data-queryparams="activityType=EMAIL NOTE TASK"
+                    data-relateto="tag"
+                    <#if tagName?has_content>
+                    data-tagname="${tagName}"
+                    data-tagkeywords="${tagKeywords}"
+                    data-tagurl="${tagUrl}"
+                    </#if>
+                    data-searchparams="tagName=${tagName}&amp;tagKeywords=${tagKeywords}&amp;tagUrl=${tagUrl}"
+                    <#if widgetClass?has_content> data-linkedclass="${widgetClass}"</#if>></div>
+              </div>
+            </td>
+          </#if>
+        <#else>
+          <p style="color:red">&nbsp;Could not get a valid authToken.</p>
+        </#if>
+      </tr>
     </table>
+  </div>
+</div>
+
