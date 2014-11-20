@@ -19,6 +19,7 @@
 </script>
 <script type="text/javascript" charset="utf-8" src="${widgetBaseUrl!}/contactsWidget/client/js/libs/requirejs/require.js" data-main="${widgetBaseUrl!}/js/activity-widgets/build/activity-widgets.packed.js" >
 </script>
+
 <#assign userParty = userLogin.getRelatedOne("Party") />
 <#if userParty?has_content>
   <#if userParty.partyTypeId == "PERSON">
@@ -110,37 +111,7 @@
   <#assign userParam>created_by_user_userLoginId=${userLogin.userLoginId}<#if userName?has_content>&created_by_user_name=${userName}<#else>${userLogin.userLoginId}</#if></#assign>
 </#if>
 
-<style type="text/css">
-.crm2widgets {
-  border:none;
-  border-collapse: collapse;
-}
-.crm2widgets table {
-  width:100%;
-}
-.crm2widgets .boxtop {
-  background-image: none;
-}
-.crm2widgets .crm2header {
-  background-image: none;
-  background-color: #e5e5e5;
-  border-color: #e5e5e5;
-  border-radius: 5px 5px 0 0;
-  color:#333333;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 5px;
-  padding-left: 10px;
-}
-.crm2widgets .crm2body {
-  border: 1px solid #e5e5e5;
-}
-.crm2widgets .crm2body td {
-  padding:10px;
-  vertical-align:top;
-}
-</style>
-
+<link rel="stylesheet" type="text/css" href="https://crm2.opentaps.com/contactsWidget/client/css/opentapsActivitiesWidgets.css"/>
 
 <a name="activities"></a>
 <div class="crm2widgets">
@@ -216,8 +187,13 @@
             </td>
           </#if>
         <#else>
-          <p style="color:red">&nbsp;Could not get a valid authToken.</p>
+          <td><p style="color:red">&nbsp;Could not get a valid authToken.</p></td>
         </#if>
+      </tr>
+      <tr>
+        <td <#if (queryParam?has_content || tagName?has_content) && useSearch> colspan="2"</#if>>
+          <div class="crm2terms bootstrap"><a href="http://crm2.opentaps.com/static/terms_of_use.html" target="_blank">Terms of Use</a></div>
+        </td>
       </tr>
     </table>
   </div>
