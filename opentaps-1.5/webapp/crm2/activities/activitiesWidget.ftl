@@ -190,9 +190,9 @@
           <td><p class="errorMsg">&nbsp;
             <#if widgetConfigurationError?has_content>
               <#if error_noAuthToken>
-                No auth token defined.  Please sign up for an account for <a href="http://www.opentaps.com">opentaps CRM2</a> and check the <a href="http://www.opentaps.org/docs/index.php/Set_up_CRM2">configuration instructions</a>.
+                No auth token defined.  Please sign up for an account for <a href="http://www.opentaps.com" target="_blank">opentaps CRM2</a> and check the <a href="https://github.com/opentaps/opentaps-crm2/tree/master/opentaps-1.5" target="_blank">configuration instructions</a>.
               <#else>
-                ${widgetConfigurationError} See the <a href="http://www.opentaps.org/docs/index.php/Set_up_CRM2">configuration instructions</a>.
+                ${widgetConfigurationError} See the <a href="https://github.com/opentaps/opentaps-crm2/tree/master/opentaps-1.5" target="_blank">configuration instructions</a>.
               </#if>
             <#else>
               Could not get a valid authToken.
