@@ -45,19 +45,20 @@ public final class ActivitiesWidgetActions {
     private static final String ACTIVITIES_WIDGET_CLIENT_DOMAIN = UtilProperties.getPropertyValue(CONFIG_RESOURCE, "crm2.activities.widget.clientDomain");
     private static final boolean ACTIVITIES_WIDGET_USE_PERM_AUTH_TOKEN = "Y".equals(UtilProperties.getPropertyValue(CONFIG_RESOURCE, "crm2.activities.widget.usePermAuthToken"));
 
-    private static void validateConfig() throws IllegalStateException {
-        if (UtilValidate.isEmpty(ACTIVITIES_WIDGET_BASE_URL)) {
-            throw new IllegalStateException("Missing configuration for crm2.activities.widget.baseUrl");
-        }
+    private static void validateConfig(Map<String, Object> context) throws IllegalStateException {
         if (UtilValidate.isEmpty(ACTIVITIES_WIDGET_AUTH_TOKEN)) {
-            throw new IllegalStateException("Missing configuration for crm2.activities.widget.authToken");
+            context.put("error_noAuthToken", true);
+            throw new IllegalStateException("No authToken configured in crm2.properties, if you do not have a token yet please sign up for an account for opentaps CRM2, then please correct the crm2.activities.widget.authToken entry in the configuration file and restart your instance.");
+        }
+        if (UtilValidate.isEmpty(ACTIVITIES_WIDGET_BASE_URL)) {
+            throw new IllegalStateException("No baseUrl configured in crm2.properties, please correct the crm2.activities.widget.baseOpentapsUrl entry in the configuration file and restart your instance.");
         }
         if (UtilValidate.isEmpty(ACTIVITIES_WIDGET_CLIENT_DOMAIN)) {
-            throw new IllegalStateException("Missing configuration for crm2.activities.widget.clientDomain");
+            throw new IllegalStateException("No clientDomain configured in crm2.properties, please correct the crm2.activities.widget.clientDomain entry in the configuration file and restart your instance.");
         }
         if (!ACTIVITIES_WIDGET_USE_PERM_AUTH_TOKEN) {
             if (UtilValidate.isEmpty(OAUTH_BASE_URL)) {
-                throw new IllegalStateException("Missing configuration for crm2.oauth.baseUrl");
+                throw new IllegalStateException("No oauth baseUrl configured in crm2.properties, please correct the crm2.oauth.baseUrl entry in the configuration file and restart your instance.");
             }
         }
     }
@@ -87,7 +88,14 @@ public final class ActivitiesWidgetActions {
      * @exception GeneralException if an error occurs
      */
     private static void getWidgetConfiguration(Map<String, Object> context, boolean getTempToken) throws GeneralException {
-        validateConfig();
+        try {
+            validateConfig(context);
+        } catch (IllegalStateException e) {
+            Debug.logError(e, MODULE);
+            context.put("widgetConfigurationError", e.getMessage());
+            context.put("isTempTokenValid", false);
+            return;
+        }
 
         // obtain a temporary, this can be skip setting the usePermAuthToken settings for testing
         if (getTempToken && !ACTIVITIES_WIDGET_USE_PERM_AUTH_TOKEN) {
