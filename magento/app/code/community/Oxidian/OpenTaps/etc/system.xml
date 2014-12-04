@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) Open Source Strategies Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+-->
+<config>
+    <sections>
+        <oxidian_opentaps translate="label" module="oxidian_opentaps">
+            <label>Opentaps CRM2</label>
+            <tab>sales</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>9900</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <expanded>1</expanded>
+            <groups>
+                <settings translate="label">
+                    <label>Open Taps Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <domain translate="label,comment">
+                            <label>Domain</label>
+                            <comment><![CDATA[Registered domain.]]></comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </domain>
+                        <user_id translate="label">
+                            <label>User Id</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>2</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </user_id>
+                        <auth_token translate="label">
+                            <label>Auth Token</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </auth_token>
+                        <javascript_location translate="label">
+                            <label>Javascript location</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>3</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </javascript_location>
+                    </fields>
+                </settings>
+            </groups>
+        </oxidian_opentaps>
+    </sections>
+</config>

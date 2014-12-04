@@ -1,0 +1,129 @@
+<!--
+/**
+ * Copyright (c) Open Source Strategies Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+-->
+<style>
+.innerTitleOpenTaps , .innerTitleOpenTapsMain
+{
+	clear:both;
+	height:30px;
+	font-size:14px;
+	background-color:#e5e5e5;
+	padding-left:14px;
+	padding-top:10px;
+	font-weight:bold
+}
+
+.innerTitleOpenTapsMain
+{
+	margin-bottom: 13px;
+}
+
+.innerContentOpenTaps .scrollContainer
+{
+   position:static;
+   clip:auto;
+   overflow:auto;
+}
+
+.innerContentOpenTaps
+{
+	border: 1px solid #e3e3e3;
+	width: 48%;
+	margin-bottom: 60px;
+}
+
+.openTapsContainer
+{
+	width: 100%;
+	border: 1px solid #e3e3e3;
+	min-height: 500px;
+}
+
+.termsOfServiceOpenTaps
+{
+	width: 100%;
+	text-align: center;
+	margin-top: 100px;
+	bottom: 0px;
+	height: 20px;
+	clear: both;
+
+}
+
+.termsOfServiceOpenTaps a
+{
+	color:#008bd5;
+	text-decoration: none;
+	font-weight: 14px;
+}
+
+</style>
+
+<div class="openTapsContainer">
+
+	<div class="innerTitleOpenTapsMain">
+		<img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_SKIN);?>adminhtml/default/default/images/opentaps_logo.png" alt="opentaps logo" />
+	</div>
+
+	<div class="innerContentOpenTaps"  style="margin-left:15px;float:left">
+		<div class="innerTitleOpenTaps" >
+			<?php echo Mage::helper('oxidian_opentaps')->__('Related Activities');?>
+		</div>
+		<?php echo $this->getLayout()->createBlock("oxidian_opentaps/widget_activity")->toHtml(); ?>
+
+		<?php echo $this->getLayout()->createBlock("oxidian_opentaps/widget_activitycreate")->toHtml(); ?>
+	</div>
+
+	<div class="innerContentOpenTaps" style="margin-right:15px;float:right">
+		<div class="innerTitleOpenTaps">
+			<?php echo Mage::helper('oxidian_opentaps')->__('Similar Activities');?>
+		</div>
+
+		<?php echo $this->getLayout()->createBlock("oxidian_opentaps/widget_activitytask")->toHtml(); ?>
+	</div>
+	<div class="termsOfServiceOpenTaps"><a href="http://crm2.opentaps.com/static/terms_of_use.html" target="_blank"><?php echo Mage::helper('oxidian_opentaps')->__('Terms of Service')?></a></div>
+</div>
+
+<script type="text/javascript">
+	window.require = { waitSeconds:600 };
+</script>
+
+<?php
+$javascriptLocation = 'https://crm2.opentaps.com';
+$javascriptLocationParam = Mage::getStoreConfig('oxidian_opentaps/settings/javascript_location', Mage::app()->getStore());
+if (isset($javascriptLocationParam) && $javascriptLocationParam != '') {
+	$javascriptLocation = $javascriptLocationParam;
+}
+?>
+
+ <script type="text/javascript">
+	function downloadOpentTaps() {
+		var element = document.createElement("script");
+		element.src = "<?php echo $javascriptLocation;?>/contactsWidget/client/js/libs/requirejs/require.js";
+		element.setAttribute("data-main","<?php echo $javascriptLocation;?>/js/activity-widgets/build/activity-widgets.packed.js")
+		document.body.appendChild(element);
+	}
+	if (window.addEventListener) {
+		window.addEventListener("load", downloadOpentTaps, false);
+	}	else if (window.attachEvent) {
+		window.attachEvent("onload", downloadOpentTaps);
+	}	else {
+		window.onload = downloadOpentTaps;
+	}
+ </script>
+
