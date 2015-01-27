@@ -121,8 +121,6 @@ function post_to_opentaps($cf7_data) {
                 	'activityType' => 'CONTACT_FORM',
                 	'attributes' => array ( "formId" => 'OSSIContactForm'),
                 	'notify' => 'Y'
-                	//'recaptcha_challenge_field' => $_REQUEST['recaptcha_challenge_field'],
-                	//'recaptcha_response_field' => $_REQUEST['recaptcha_response_field']
             	);
 
 		$json_data = json_encode($data);
