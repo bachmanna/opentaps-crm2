@@ -10,9 +10,14 @@ Post the contact form 7 data to opentaps crm2
 
 == Description ==
 
-Post the contact form 7 data (first name, last name, company, phone, email, comments only) into CRM2. Requires client domain and auth token of CRM2 to post the information.
+Integrates WordPress Contact Form 7 with opentaps CRM2, your free web/mobile/social CRM.
+
+This plugin posts the contact form 7 fields (first name, last name, company, phone, email, comments only) into CRM2. 
 
 == Installation ==
 
-Upload plugin to your blog, Activate it, then enter your [crm2.opentaps.com client domain and auth token].(http://crm2.opentaps.com)
+1.  Sign up for an account at opentaps.com
+2.  Upload plugin to your blog
+3.  Activate it
+4.  Enter your crm2.opentaps.com client domain and auth token.  See http://bit.ly/1BEqsS7
 
