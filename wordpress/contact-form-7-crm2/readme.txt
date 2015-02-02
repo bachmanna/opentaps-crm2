@@ -20,7 +20,7 @@ This plugin posts the contact form 7 fields (first name, last name, company, pho
 2.  Upload plugin to your blog
 3.  Activate it
 4.  Enter your crm2.opentaps.com client domain and auth token.  See http://bit.ly/1BEqsS7
-5.  Put next fields name in to the Contact Form 7 plugin:
+5.  Put the following fields name in your Contact Form 7 plugin.  They must be spelled exactly like this:
     [text first-name]
     [text last-name]
     [text company-name]
